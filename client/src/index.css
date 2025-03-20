@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+
+html,body, #root{
+  height: 100vh;
+}
+/* .recharts-tooltip-wrapper{
+  visibility: hidden !important;
+} */
