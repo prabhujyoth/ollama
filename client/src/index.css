@@ -1,9 +1,16 @@
 @import "tailwindcss";
 
-
-html,body, #root{
+html,
+body,
+#root {
   height: 100vh;
 }
-/* .recharts-tooltip-wrapper{
+.recharts-tooltip-wrapper {
   visibility: hidden !important;
-} */
+}
+
+.circle {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+}
