@@ -111,7 +111,7 @@ export default function LLM() {
     <form className="h-full" onSubmit={handleSubmit}>
       <div className="flex items-center gap-2 flex-col p-8 h-full">
         <div
-          className="body overflow-auto flex flex-col gap-8 p-4 flex-1 bg-neutral-800  max-[596px]:w-full  w-3/4  rounded-sm [&::-webkit-scrollbar]:w-2
+          className="body overflow-auto flex flex-col gap-8 p-4 flex-1 bg-[#252525]  max-[596px]:w-full  w-3/4  rounded-sm [&::-webkit-scrollbar]:w-2
   [&::-webkit-scrollbar-track]:rounded-full
   [&::-webkit-scrollbar-track]:bg-gray-100
   [&::-webkit-scrollbar-thumb]:rounded-full
@@ -121,8 +121,10 @@ export default function LLM() {
         >
           {messages.length === 0 && (
             <div className="flex flex-col gap-2 items-center justify-center h-full">
-              <h2 className="text-4xl">Hey User👋!</h2>
-              <p className="text-xs">Start chat by entering a prompt.</p>
+              <h2 className="text-4xl">Hey there! 😊</h2>
+              <p className="text-xs">
+                Just type in anything to start the chat—I'm here to help! 🚀
+              </p>
             </div>
           )}
           {messages.map((msg, index) => (
@@ -165,15 +167,15 @@ export default function LLM() {
         </div>
 
         <TextInput
-          radius="xl"
+          radius="md"
           className="xl:w-1/2 md:w-3/4 sm:w-3/4 w-3/4"
-          size="md"
-          placeholder="Message Llama 3.2 LLM"
+          size="lg"
+          placeholder="Ask Anything..."
           value={userInput}
-          rightSectionWidth={42}
+          rightSectionWidth={48}
           onChange={(e) => handleUserInput(e)}
           rightSection={
-            <ActionIcon type="submit" size={32} radius="xl" variant="filled">
+            <ActionIcon type="submit" size={38} radius="md" variant="filled">
               <img src={sendIcon} alt="" width={15} />
             </ActionIcon>
           }

@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="flex flex-col h-full">
       <Nav />
-      <div className="overflow-auto h-52 flex-1">
+      <div className="overflow-auto h-52 flex-1 bg-[#212121]">
         <Outlet />
       </div>
     </div>
