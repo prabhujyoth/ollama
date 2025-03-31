@@ -96,7 +96,7 @@ export default function SWP() {
           </div>
           <div>
             <NumberInput
-              label="Withdrawal Amount"
+              label="Yearly Withdrawal Amount"
               id="withdrawalAmount"
               value={swpFormData.withdrawalAmount}
               onChange={(value) => handleSwpUpdate(value, "withdrawalAmount")}

@@ -98,7 +98,7 @@ export default function SIP() {
       <div className="chart-section border rounded p-4 border-neutral-600 flex-1 w-full lg:w-1/4 md:w-1/4 sm:w-full h-full flex">
         <div className="left flex flex-col w-full">
           <Title order={2}>SIP Calculator</Title>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 gap-4">
             <NumberInput
               label="Total Investment"
               id="totalInvestment"
@@ -121,7 +121,7 @@ export default function SIP() {
               placeholder="i.e, 1 Yr"
             />
           </div>
-          <div className="flex">
+          <div className="flex flex-col lg:flex-row md:flex-row sm:flex-col">
             <div className="right p-4 overflow-hidden">
               <div className="w-56 h-56">
                 <DonutChart
