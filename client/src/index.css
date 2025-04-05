@@ -19,3 +19,12 @@ body,
   width: 1rem;
   border-radius: 50%;
 }
+
+.mantine-Tabs-root {
+  height: 100%;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.mantine-Tabs-panel {
+  overflow: auto;
+}
