@@ -3,6 +3,19 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import { TIME_SERIES_URL } from "../api_url/apis";
 import { TOP_GAINERS_LOSERS } from "../api_url/apis";
 import { Text, Paper, Title, Tabs, Table } from "@mantine/core";
+import app_icon from "../assets/apple-logo.png";
+import tesla_icon from "../assets/tesla.png";
+import microsoft_icon from "../assets/microsoft.png";
+import amazon_icon from "../assets/amazon.png";
+import zillow_icon from "../assets/zillow.png";
+import twilio_icon from "../assets/twilio.png";
+import draftking from "../assets/draft_king.png";
+import vevva_icon from "../assets/veeva.svg";
+import bluebrid from "../assets/bluebrid.png";
+import plugpower from "../assets/plug-logo.svg";
+import inovio from "../assets/inovio.jpg";
+import carvana from "../assets/car.svg";
+
 export default function Stocks() {
   const [chartsData, setChartsData] = useState([]);
   const [topGainersData, setTopGainersData] = useState([]);
@@ -131,37 +144,56 @@ export default function Stocks() {
       <div className="flex flex-row gap-4 h-3/4">
         <Paper shadow="xs" p="xl" className="flex-1">
           <Title order={2} className="pb-2">
-            <LineChart
-              xAxis={[
-                {
-                  data: chartsData.map((item) => item.time),
-                  scaleType: "point",
-                  sx: {
-                    ".MuiChartsAxis-tickLabel": { fill: "white" },
-                    ".MuiChartsAxis-label": { fill: "white" },
-                  },
-                },
-              ]}
-              yAxis={[
-                {
-                  sx: {
-                    // Y axis label and ticks
-                    ".MuiChartsAxis-tickLabel": { fill: "white" },
-                    ".MuiChartsAxis-label": { fill: "white" },
-                  },
-                },
-              ]}
-              series={[
-                {
-                  data: chartsData.map((item) => item.price),
-                  label: "Closing Price",
-                  showMark: false,
-                },
-              ]}
-              width={800}
-              height={550}
-            />
+            {ticker}
           </Title>
+          <LineChart
+            xAxis={[
+              {
+                data: chartsData.map((item) => item.time),
+                scaleType: "point",
+                sx: {
+                  ".MuiChartsAxis-tickLabel": { fill: "white" },
+                  ".MuiChartsAxis-label": { fill: "white" },
+                },
+                axisLine: { stroke: "white" },
+                tickLabelStyle: { fill: "white" },
+              },
+            ]}
+            yAxis={[
+              {
+                sx: {
+                  // Y axis label and ticks
+                  ".MuiChartsAxis-tickLabel": { fill: "white" },
+                  ".MuiChartsAxis-label": { fill: "white" },
+                },
+                axisLine: { stroke: "white" },
+                tickLabelStyle: { fill: "white" },
+              },
+            ]}
+            series={[
+              {
+                data: chartsData.map((item) => item.price),
+                label: "Closing Price",
+                showMark: false,
+              },
+            ]}
+            sx={{
+              ".MuiChartsAxis-line": {
+                stroke: "white",
+              },
+              ".MuiChartsLegend-root": {
+                color: "white",
+              },
+              ".MuiChartsLegend-series": {
+                fill: "white",
+              },
+              ".MuiChartsAxis-tickLabel": {
+                fill: "white",
+              },
+            }}
+            width={800}
+            height={550}
+          />
         </Paper>
         <Paper shadow="xs" p="xl" className="flex-1">
           <Tabs value={activeTab} onChange={setActiveTab}>
@@ -239,25 +271,94 @@ export default function Stocks() {
           <Title order={2} className="pb-2">
             High Cap
           </Title>
-          <Paper shadow="md" radius="md" withBorder p="xl">
-            <Text>Company</Text>
-          </Paper>
+          <div className="flex gap-2">
+            <div
+              onClick={() => handleTickerUpdate("AAPL")}
+              className="card cursor-pointer flex justify-center items-center"
+            >
+              <img src={app_icon} className="h-[60%]" alt="" />
+            </div>
+            <div
+              className="card cursor-pointer flex justify-center items-center"
+              onClick={() => handleTickerUpdate("MSFT")}
+            >
+              <img src={microsoft_icon} className="h-[60%]" alt="" />
+            </div>
+            <div
+              className="card cursor-pointer flex justify-center items-center"
+              onClick={() => handleTickerUpdate("AMZN")}
+            >
+              <img src={amazon_icon} className="h-[60%]" alt="" />
+            </div>
+            <div
+              className="card cursor-pointer flex justify-center items-center"
+              onClick={() => handleTickerUpdate("TSLA")}
+            >
+              <img src={tesla_icon} className="h-[60%]" alt="" />
+            </div>
+          </div>
         </Paper>
         <Paper shadow="xs" p="xl" className="flex-1">
           <Title order={2} className="pb-2">
             Mid Cap
           </Title>
-          <Paper shadow="md" radius="md" withBorder p="xl">
-            <Text>Company</Text>
-          </Paper>
+          <div className="flex gap-2">
+            <div
+              onClick={() => handleTickerUpdate("Z")}
+              className="card cursor-pointer flex justify-center items-center"
+            >
+              <img src={zillow_icon} className="h-[60%]" alt="" />
+            </div>
+            <div
+              className="card cursor-pointer flex justify-center items-center"
+              onClick={() => handleTickerUpdate("TWLO")}
+            >
+              <img src={twilio_icon} className="h-[60%]" alt="" />
+            </div>
+            <div
+              className="card cursor-pointer flex justify-center items-center"
+              onClick={() => handleTickerUpdate("DKNG")}
+            >
+              <img src={draftking} className="h-[60%]" alt="" />
+            </div>
+            <div
+              className="card cursor-pointer flex justify-center items-center"
+              onClick={() => handleTickerUpdate("VEEV")}
+            >
+              <img src={vevva_icon} className="h-[60%]" alt="" />
+            </div>
+          </div>
         </Paper>
         <Paper shadow="xs" p="xl" className="flex-1">
           <Title order={2} className="pb-2">
             Low Cap
           </Title>
-          <Paper shadow="md" radius="md" withBorder p="xl">
-            <Text>Company</Text>
-          </Paper>
+          <div className="flex gap-2">
+            <div
+              onClick={() => handleTickerUpdate("BLUE")}
+              className="card cursor-pointer flex justify-center items-center"
+            >
+              <img src={bluebrid} className="h-[60%]" alt="" />
+            </div>
+            <div
+              className="card cursor-pointer flex justify-center items-center"
+              onClick={() => handleTickerUpdate("PLUG")}
+            >
+              <img src={plugpower} className="h-[60%]" alt="" />
+            </div>
+            <div
+              className="card cursor-pointer flex justify-center items-center"
+              onClick={() => handleTickerUpdate("INO")}
+            >
+              <img src={inovio} className="h-[60%]" alt="" />
+            </div>
+            <div
+              className="card cursor-pointer flex justify-center items-center"
+              onClick={() => handleTickerUpdate("CVNA")}
+            >
+              <img src={carvana} className="h-[60%]" alt="" />
+            </div>
+          </div>
         </Paper>
       </div>
     </div>

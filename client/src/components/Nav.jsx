@@ -11,9 +11,9 @@ export default function Nav() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center">
-              {/* <a href="/" className="text-2xl font-bold text-blue-500">
-                The Art Of Making Money
-              </a> */}
+              <a href="/" className="text-2xl font-bold text-blue-400">
+                Coinwise
+              </a>
             </div>
 
             {/* Desktop Menu */}

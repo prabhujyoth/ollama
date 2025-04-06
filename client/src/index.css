@@ -28,3 +28,10 @@ body,
 .mantine-Tabs-panel {
   overflow: auto;
 }
+
+.card {
+  width: 8rem;
+  height: 5rem;
+  border: 1px solid rgb(68, 68, 68);
+  border-radius: 0.45rem;
+}
