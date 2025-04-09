@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ActionIcon, Skeleton, TextInput } from "@mantine/core";
+import { ActionIcon, TextInput } from "@mantine/core";
 import sendIcon from "../assets/send.svg";
 import userIcon from "../assets/user.svg";
-import aiICon from "../assets/ai.svg";
+import aiIcon from "../assets/ai.svg";
+import { marked } from "marked";
 
 export default function LLM() {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const botMessageRef = useRef(""); // Ref to store the bot's message text
+  const botMessageRef = useRef("");
 
   function handleUserInput(e) {
     setUserInput(e.target.value);
@@ -18,7 +19,16 @@ export default function LLM() {
     e.preventDefault();
     if (!userInput.trim()) return;
 
-    setMessages((prev) => [...prev, { role: "user", text: userInput }]);
+    const newUserMessage = { role: "user", text: userInput };
+    const fullMessageHistory = [
+      ...messages.map((msg) => ({
+        role: msg.role === "bot" ? "assistant" : msg.role,
+        content: msg.text,
+      })),
+      { role: "user", content: userInput },
+    ];
+
+    setMessages((prev) => [...prev, newUserMessage]);
     setUserInput("");
     setLoading(true);
 
@@ -26,20 +36,16 @@ export default function LLM() {
       const response = await fetch("http://localhost:8080/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: userInput }),
+        body: JSON.stringify({ messages: fullMessageHistory }),
       });
 
-      if (!response.body) {
-        throw new Error("No response body received!");
-      }
+      if (!response.body) throw new Error("No response body");
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
 
-      botMessageRef.current = ""; // Reset bot message before a new response
-
-      // Add a new empty bot message first
+      botMessageRef.current = "";
       setMessages((prev) => [...prev, { role: "bot", text: "" }]);
 
       while (true) {
@@ -72,53 +78,51 @@ export default function LLM() {
             if (outerJson.response) {
               try {
                 const innerJson = JSON.parse(outerJson.response);
-                if (innerJson.response) {
-                  botMessageRef.current += innerJson.response; // Append response instead of replacing
+                if (innerJson.message?.content) {
+                  botMessageRef.current += innerJson.message.content;
 
                   setMessages((prev) => {
-                    const updatedMessages = [...prev];
-                    updatedMessages[updatedMessages.length - 1] = {
-                      ...updatedMessages[updatedMessages.length - 1],
+                    const updated = [...prev];
+                    updated[updated.length - 1] = {
+                      ...updated[updated.length - 1],
                       text: botMessageRef.current,
                     };
-                    return updatedMessages;
+                    return updated;
                   });
                 }
-              } catch (innerErr) {
-                console.error("Inner JSON Parse Error:", innerErr);
+              } catch {
+                botMessageRef.current += outerJson.response;
+
+                setMessages((prev) => {
+                  const updated = [...prev];
+                  updated[updated.length - 1] = {
+                    ...updated[updated.length - 1],
+                    text: botMessageRef.current,
+                  };
+                  return updated;
+                });
               }
             }
-          } catch (outerErr) {
-            console.error("Outer JSON Parse Error:", outerErr);
+          } catch (err) {
+            console.error("JSON parse error:", err);
           }
 
           startIndex = jsonEnd;
         }
+
         buffer = buffer.slice(startIndex);
       }
-    } catch (error) {
-      console.error("Fetch Error:", error);
+    } catch (err) {
+      console.error("Fetch error:", err);
     } finally {
       setLoading(false);
     }
   }
 
-  useEffect(() => {
-    console.log("Updated Messages State:", messages);
-  }, [messages]);
-
   return (
     <form className="h-full" onSubmit={handleSubmit}>
       <div className="flex items-center gap-2 flex-col p-8 h-full">
-        <div
-          className="body overflow-auto flex flex-col gap-8 p-4 flex-1 bg-[#252525]  max-[596px]:w-full  w-3/4  rounded-sm [&::-webkit-scrollbar]:w-2
-  [&::-webkit-scrollbar-track]:rounded-full
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:rounded-full
-  [&::-webkit-scrollbar-thumb]:bg-blue-500
-  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-  dark:[&::-webkit-scrollbar-thumb]:bg-blue-500"
-        >
+        <div className="overflow-auto flex flex-col gap-8 p-4 flex-1 bg-[#252525] max-[596px]:w-full w-3/4 rounded-sm">
           {messages.length === 0 && (
             <div className="flex flex-col gap-2 items-center justify-center h-full">
               <h2 className="text-4xl">Hey there! 😊</h2>
@@ -136,9 +140,7 @@ export default function LLM() {
             >
               {msg.role === "bot" && (
                 <div className="circle flex items-center justify-center w-10 h-10 rounded-full bg-blue-500">
-                  <div className="w-40 flex justify-center">
-                    <img src={aiICon} width={20} alt="" />
-                  </div>
+                  <img src={aiIcon} width={20} alt="" />
                 </div>
               )}
               <div
@@ -146,24 +148,20 @@ export default function LLM() {
                   msg.role === "user" ? "text-right" : "text-left"
                 }`}
               >
-                <p>{msg.text}</p>
+                <div
+                dangerouslySetInnerHTML={{ __html: marked(msg.text) }}
+                className="prose prose-invert max-w-none"
+              ></div>
+
+
               </div>
               {msg.role === "user" && (
                 <div className="circle flex items-center justify-center w-10 h-10 rounded-full bg-blue-500">
-                  <div className="w-40 flex justify-center">
-                    <img src={userIcon} width={20} alt="" />
-                  </div>
+                  <img src={userIcon} width={20} alt="" />
                 </div>
               )}
             </div>
           ))}
-          {/* {loading && (
-            <div className="w-full">
-              <Skeleton height={8} radius="xl" />
-              <Skeleton height={8} mt={6} radius="xl" />
-              <Skeleton height={8} mt={6} width="70%" radius="xl" />
-            </div>
-          )} */}
         </div>
 
         <TextInput
@@ -173,7 +171,7 @@ export default function LLM() {
           placeholder="Ask Anything..."
           value={userInput}
           rightSectionWidth={48}
-          onChange={(e) => handleUserInput(e)}
+          onChange={handleUserInput}
           rightSection={
             <ActionIcon type="submit" size={38} radius="md" variant="filled">
               <img src={sendIcon} alt="" width={15} />
