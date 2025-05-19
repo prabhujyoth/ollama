@@ -1,1 +1,1 @@
-# ollama
+# Coinwise
